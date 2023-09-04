@@ -12,18 +12,26 @@ export function Form() {
 
   useEffect(() => {
     obtenerDestino();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    if (!value) {
+      return;
+    }
+    const updatedValue = name === "people" ? parseInt(value || 0) < 0 ? 1 : parseInt(value) : value
+
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: updatedValue
     });
   };
 
   const subTotal = () => {
-    return obtenerPrecio() * formData.people.toFixed(2);
+    return obtenerPrecio() * parseInt(formData.people).toFixed(2);
   };
   const impuestos = () => {
     return ((obtenerPrecio() * destino.tax) / 100).toFixed(2);
@@ -35,6 +43,8 @@ export function Form() {
 
   useEffect(() => {
     obtenerPrecio();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destino]);
 
   const obtenerPrecio = () => {
